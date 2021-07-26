@@ -9,6 +9,7 @@ import Foundation
 
 struct MemoryGameTheme<CardContent: Equatable> {
     private(set) var name: String
+    // TODO: - Out of Range because code doesn't run on init.
     private(set) var content: [CardContent] {
         didSet {
             if numberOfPairsOfCards > content.count {

@@ -13,7 +13,10 @@ struct MemoryGame<CardContent: Equatable> {
     
     private(set) var cards: [Card]
     
-    private var indexOfTheOneAndOnlyFaceUpCard: Int?
+    private var indexOfTheOneAndOnlyFaceUpCard: Int? {
+        get { cards.indices.filter { cards[$0].isFaceUp }.oneAndOnly }
+        set { cards.indices.forEach { cards[$0].isFaceUp = ($0 == newValue) } }
+    }
     
     private var timeOfLastMatchedCard = Date()
     
@@ -42,14 +45,10 @@ struct MemoryGame<CardContent: Equatable> {
                 } else if cards[chosenIndex].alreadySeen {
                     score -= 1
                 }
-                indexOfTheOneAndOnlyFaceUpCard = nil
+                cards[chosenIndex].isFaceUp = true
             } else {
-                for index in cards.indices {
-                    cards[index].isFaceUp = false
-                }
                 indexOfTheOneAndOnlyFaceUpCard = chosenIndex
             }
-            cards[chosenIndex].isFaceUp = true
             cards[chosenIndex].alreadySeen = true
         }
     }
@@ -57,7 +56,7 @@ struct MemoryGame<CardContent: Equatable> {
     // Big jump for me. Using a Generic, initializing a variable as the Generic Type, and then building an API
     // that asks for a function that returns the Generic Type. It's super cool!
     init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent) {
-        cards = [Card]()
+        cards = []
         for pairIndex in 0..<numberOfPairsOfCards {
             let content = createCardContent(pairIndex)
             cards.append(Card(content: content, id: pairIndex * 2))
@@ -70,11 +69,17 @@ struct MemoryGame<CardContent: Equatable> {
         var isFaceUp = false
         var isMatched = false
         var alreadySeen = false
-        var content: CardContent
-        var id: Int
+        let content: CardContent
+        let id: Int
     }
 }
 
-enum MemoryGameError: Error {
+private enum MemoryGameError: Error {
     case cardNotFound
+}
+
+extension Array {
+    var oneAndOnly: Element? {
+        count == 1 ? first : nil
+    }
 }

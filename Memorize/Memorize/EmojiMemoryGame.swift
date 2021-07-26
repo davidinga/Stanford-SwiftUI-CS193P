@@ -11,19 +11,20 @@ import SwiftUI
 /// ViewModel enables the entire Reactive Architecture. ObservableObject.
 /// Swift can detect changes in Structs. @Published is assigned to a Struct.
 class EmojiMemoryGame: ObservableObject {
+    typealias Card = MemoryGame<String>.Card
     
     private static var themes = [
         ( name:                  "Cars",
           emojis:                ["🚗", "🚕", "🚙", "🚌", "🚎", "🏎", "🚓", "🚑",
                                   "🛻", "🚚", "🚛", "🚜", "🛺", "🚔", "🚍", "🚘"],
-          numberOfPairsOfCards:  0,
+          numberOfPairsOfCards:  8,
           color:                 "red",
           gradient:              nil ),
         
         ( name:                  "Animals",
           emojis:                ["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼",
                                   "🐻‍❄️", "🐨", "🐯", "🦁", "🐮", "🐷", "🐸", "🐵"],
-          numberOfPairsOfCards:  6,
+          numberOfPairsOfCards:  8,
           color:                 "green",
           gradient:              nil ),
         
@@ -44,7 +45,7 @@ class EmojiMemoryGame: ObservableObject {
         ( name:                  "Electronics",
           emojis:                ["⌚️", "📱", "💻", "⌨️", "🖥", "🖱", "🖨", "🖲",
                                   "🕹", "📞", "📟", "📻", "🎙", "🎚", "📹", "🎛"],
-          numberOfPairsOfCards:  4,
+          numberOfPairsOfCards:  8,
           color:                 "gray",
           gradient:              ["gray", "black"] ),
     ]
@@ -94,7 +95,7 @@ class EmojiMemoryGame: ObservableObject {
     @Published private var themeModel: MemoryGameTheme<String>!
     
     /// ViewModel is the Interpretor of the Model to the View
-    var cards: [MemoryGame<String>.Card] {
+    var cards: [Card] {
         gameModel.cards
     }
     
@@ -121,7 +122,7 @@ class EmojiMemoryGame: ObservableObject {
     // MARK: - Intent(s)
     /// Expresses the User Intent to the Model
     
-    func choose(_ card: MemoryGame<String>.Card) {
+    func choose(_ card: Card) {
         gameModel.choose(card)
     }
 }
