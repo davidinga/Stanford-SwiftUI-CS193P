@@ -52,7 +52,7 @@ struct CardView: View {
             ZStack {
                 let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
                 if card.isFaceUp {
-                    Pie(startAngle: Angle(degrees: 0-90), endAngle: Angle(degrees: 110-90)).padding(5).opacity(0.2).animation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/)
+                    //Pie(startAngle: Angle(degrees: 0-90), endAngle: Angle(degrees: 110-90)).padding(5).opacity(0.2)
                     if let gradient = gradient {
                         shape.strokeBorder(gradient)
                     } else {
