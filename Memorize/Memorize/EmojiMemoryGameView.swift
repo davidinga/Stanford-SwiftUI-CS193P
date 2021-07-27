@@ -13,7 +13,6 @@ struct EmojiMemoryGameView: View {
     @ObservedObject var game: EmojiMemoryGame
     
     var body: some View {
-        ScrollView {
             VStack {
                 HStack {
                     Button("New Game", action: { game.createMemoryGame() })
@@ -24,23 +23,16 @@ struct EmojiMemoryGameView: View {
                 Text("Memorize \(game.theme.name)!")
                     .font(.largeTitle)
                 
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 78))]) {
-                    ForEach(game.cards) { card in
-                        CardView(card, game.color, game.gradient)
-                            .aspectRatio(2/3, contentMode: .fit)
-                            /// Intent Functions express the User's Intent to the ViewModel
-                            .onTapGesture {
-                                game.choose(card)
-                            }
-                    }
+                AspectVGrid(items: game.cards, aspectRatio: 2/3) { card in
+                    CardView(card, game.color, game.gradient)
+                        .padding(4)
+                        /// Intent Functions express the User's Intent to the ViewModel
+                        .onTapGesture {
+                            game.choose(card)
+                        }
+                        .animation(.easeInOut)
                 }
-            }
-        }
-        .padding(.all)
-    }
-    
-    func widthThatFitsBest(for numberOfCards: Int) -> CGFloat {
-        return CGFloat((16.0 / Double(numberOfCards)) * 50.0)
+            }.padding(10)
     }
 }
 
@@ -60,7 +52,7 @@ struct CardView: View {
             ZStack {
                 let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
                 if card.isFaceUp {
-                    shape.fill().foregroundColor(.white)
+                    Pie(startAngle: Angle(degrees: 0-90), endAngle: Angle(degrees: 110-90)).padding(5).opacity(0.2).animation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/)
                     if let gradient = gradient {
                         shape.strokeBorder(gradient)
                     } else {
@@ -70,7 +62,6 @@ struct CardView: View {
                 } else if card.isMatched {
                     shape.opacity(0)
                 } else {
-                    shape.fill()
                     if let gradient = gradient {
                         shape.fill(gradient)
                     } else {
@@ -108,17 +99,19 @@ struct CardView: View {
 
 
 
-
-
-
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         let game = EmojiMemoryGame()
+        game.choose(game.cards.first!)
         
-        EmojiMemoryGameView(game: game)
-            .preferredColorScheme(.dark)
-        EmojiMemoryGameView(game: game)
-            .preferredColorScheme(.light)
-
+        @ViewBuilder
+        var gameView: some View {
+            EmojiMemoryGameView(game: game)
+                 .preferredColorScheme(.dark)
+            EmojiMemoryGameView(game: game)
+                 .preferredColorScheme(.light)
+        }
+        
+       return gameView
     }
 }
