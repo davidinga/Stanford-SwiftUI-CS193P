@@ -10,10 +10,25 @@ import SwiftUI
 struct ClassicSetGameView: View {
     @ObservedObject var game: ClassicSetGame
     var body: some View {
-        AspectVGrid(items: game.cards, aspectRatio: 2/3) { card in
-            CardView(uniqueShape: card.content)
-                .padding(4)
-        }
+        VStack {
+            HStack {
+                Button(action: game.createNewGame) {
+                    Text("New Game")
+                }
+                Spacer()
+                Text("Score: \(game.score)")
+            }.padding(5)
+            AspectVGrid(items: game.cards, aspectRatio: 2/3) { card in
+                CardView(game: game, card: card, uniqueShape: card.content)
+                    .padding(4)
+                    .onTapGesture {
+                        game.choose(card)
+                    }
+            }
+            Button(action: game.dealCards) {
+                Text("Deal 3 More Cards")
+            }
+        }.padding(5)
     }
 }
 

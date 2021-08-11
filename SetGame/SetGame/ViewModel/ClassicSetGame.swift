@@ -79,6 +79,31 @@ class ClassicSetGame: ObservableObject {
     @Published private var setGame = createClassicSetGame()
     
     var cards: [Card] {
-        Array(Array(setGame.cards)[0...11])
+        Array(setGame.cardsInPlay)
+    }
+    
+    var score: Int {
+        setGame.players.first!.score
+    }
+    
+    var threeCardsSelected: Bool {
+        setGame.threeCardsSelected
+    }
+    
+    func isSelected(_ card: Card) -> Bool {
+        if setGame.selectedCardIDs.contains(card.id) { return true }
+        return false
+    }
+    
+    func choose(_ card: Card) {
+        setGame.choose(card)
+    }
+    
+    func dealCards() {
+        setGame.dealCards()
+    }
+    
+    func createNewGame() {
+        setGame = ClassicSetGame.createClassicSetGame()
     }
 }
