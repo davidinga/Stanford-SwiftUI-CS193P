@@ -108,7 +108,8 @@ struct SetGame<CardContent> where CardContent: Hashable {
     }
     
     /// Finds a matching set and randomly adds two of the three cards to `selectedCardIDs`.
-    mutating func findPairOfMatchingCards() {
+    mutating func findPairOfMatchingCards() -> Bool {
+        dealCards()
         let shuffledCards = cardsInPlay.shuffled()
         
         for firstCardIndex in shuffledCards.indices {
@@ -130,11 +131,13 @@ struct SetGame<CardContent> where CardContent: Hashable {
                             let secondCard = shuffledCards[shuffledCardIndices[1]]
                             
                             selectedCardIDs = [firstCard.id, secondCard.id]
+                            return true
                         }
                     }
                 }
             }
         }
+        return false
     }
 
     init(createCardContent: ([(numberOfShapes: TriState, shape: TriState, shading: TriState, color: TriState)]) -> [CardContent]) {

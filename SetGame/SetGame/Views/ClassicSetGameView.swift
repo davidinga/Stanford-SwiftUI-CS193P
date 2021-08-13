@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ClassicSetGameView: View {
     @ObservedObject var game: ClassicSetGame
+    @State private var showingHintAlert = false
+    
     var body: some View {
         VStack {
             HStack {
@@ -30,8 +32,18 @@ struct ClassicSetGameView: View {
                     Text("Deal 3 More Cards")
                 }
                 Spacer()
-                Button(action: game.requestHint) {
-                    Text("Hint")
+                Button("Hint") {
+                    showingHintAlert = !game.requestHint()
+                }.alert(isPresented: $showingHintAlert) {
+                    Alert(
+                        title: Text("Hint"),
+                        message: Text("No matching sets left. 🧐"),
+                        primaryButton: .default(
+                                        Text("Deal 3 More Cards"),
+                                        action: game.dealCards
+                        ),
+                        secondaryButton: .default(Text("OK"))
+                    )
                 }
             }.padding(.horizontal)
             
