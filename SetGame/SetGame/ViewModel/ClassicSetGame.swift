@@ -86,6 +86,10 @@ class ClassicSetGame: ObservableObject {
         setGame.dealCards(isUserRequest: true)
     }
     
+    func requestHint() {
+        setGame.findPairOfMatchingCards()
+    }
+    
     func createNewGame() {
         setGame = ClassicSetGame.createClassicSetGame()
     }

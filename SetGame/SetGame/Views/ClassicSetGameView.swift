@@ -25,9 +25,16 @@ struct ClassicSetGameView: View {
                         game.choose(card)
                     }
             }
-            Button(action: game.dealCards) {
-                Text("Deal 3 More Cards")
-            }
+            HStack {
+                Button(action: game.dealCards) {
+                    Text("Deal 3 More Cards")
+                }
+                Spacer()
+                Button(action: game.requestHint) {
+                    Text("Hint")
+                }
+            }.padding(.horizontal)
+            
         }.padding()
     }
 }

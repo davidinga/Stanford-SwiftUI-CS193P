@@ -48,12 +48,12 @@ struct ShapeView: View {
         case .squiggle:
             ZStack {
                 Squiggle().strokeBorder(features.color)
-                Squiggle().fill(Color.red).opacity(0.5)
+                Squiggle().fill(features.color).opacity(0.5)
             }
         case .oval:
             ZStack {
                 Oval().strokeBorder(features.color)
-                Oval().fill(Color.red).opacity(0.5)
+                Oval().fill(features.color).opacity(0.5)
             }
         }
     }

@@ -106,6 +106,36 @@ struct SetGame<CardContent> where CardContent: Hashable {
             deckOfCards.removeSubrange(0..<numberOfCardsToStartWith)
         }
     }
+    
+    /// Finds a matching set and randomly adds two of the three cards to `selectedCardIDs`.
+    mutating func findPairOfMatchingCards() {
+        let shuffledCards = cardsInPlay.shuffled()
+        
+        for firstCardIndex in shuffledCards.indices {
+            for secondCardIndex in shuffledCards.indices {
+                for thirdCardIndex in shuffledCards.indices {
+                    if Set([shuffledCards[firstCardIndex].id, shuffledCards[secondCardIndex].id, shuffledCards[thirdCardIndex].id]).count == 3 {
+                        
+                        let first = shuffledCards[firstCardIndex].features
+                        let second = shuffledCards[secondCardIndex].features
+                        let third = shuffledCards[thirdCardIndex].features
+                        
+                        if isAllTheSameOrAllDifferent([first.numberOfShapes, second.numberOfShapes, third.numberOfShapes]),
+                           isAllTheSameOrAllDifferent([first.shape, second.shape, third.shape]),
+                           isAllTheSameOrAllDifferent([first.shading, second.shading, third.shading]),
+                           isAllTheSameOrAllDifferent([first.color, second.color, third.color])
+                        {
+                            let shuffledCardIndices = [firstCardIndex, secondCardIndex, thirdCardIndex].shuffled()
+                            let firstCard = shuffledCards[shuffledCardIndices[0]]
+                            let secondCard = shuffledCards[shuffledCardIndices[1]]
+                            
+                            selectedCardIDs = [firstCard.id, secondCard.id]
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     init(createCardContent: ([(numberOfShapes: TriState, shape: TriState, shading: TriState, color: TriState)]) -> [CardContent]) {
         /// A collection of features for deck of cards.
