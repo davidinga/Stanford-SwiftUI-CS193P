@@ -11,6 +11,7 @@ struct SetGame<CardContent> where CardContent: Hashable {
     let numberOfCards = 81
     let numberOfFeatures = 4
     let numberOfCardsToSelect = 3
+    let numberOfCardsToStartWith = 12
     var deckOfCards: [Card] = []
     var cardsInPlay: [Card] = []
     var selectedCardIDs: [Int] = []
@@ -58,7 +59,7 @@ struct SetGame<CardContent> where CardContent: Hashable {
         /// If three cards were selected and not matched, clear selected cards.
         if threeCardsSelected { selectedCardIDs = [] }
         /// Remove any cards that were matched from the `cardsInPlay`.
-        cardsInPlay.removeAll(where: {$0.isMatched == true})
+        dealCards()
         /// Deselect card if one or two cards are currently selected.
         if let index = selectedCardIDs.firstIndex(of: card.id), !threeCardsSelected {
             selectedCardIDs.remove(at: index)
@@ -78,11 +79,32 @@ struct SetGame<CardContent> where CardContent: Hashable {
     }
     
     /// Takes a specified`numberOfCards` out of `deckOfCards` and adds them to the `cardsInPlay`.
-    mutating func dealCards(numberOfCards: Int = 3) {
-        guard !deckOfCards.isEmpty else { return }
+    mutating func dealCards(isNewGame: Bool = false, isUserRequest: Bool = false) {
+        /// Remove matched cards instead of replacing them when the `deckOfCards` is empty.
+        guard !deckOfCards.isEmpty else {
+            cardsInPlay.removeAll(where: {$0.isMatched == true})
+            return
+        }
         
-        cardsInPlay.append(contentsOf: deckOfCards[0..<numberOfCards])
-        deckOfCards.removeSubrange(0..<numberOfCards)
+        var cardsAlreadyDelt = false
+        /// Replace matched cards with new cards from the `deckOfCards`.
+        cardsInPlay.indices.forEach { index in
+            if cardsInPlay[index].isMatched {
+                cardsInPlay[index] = deckOfCards.first!
+                deckOfCards.removeFirst()
+                cardsAlreadyDelt = true
+            }
+        }
+        /// Deal more cards if requested by the user and not already replaced by matching cards.
+        if isUserRequest && !cardsAlreadyDelt {
+            cardsInPlay.append(contentsOf: deckOfCards[0..<3])
+            deckOfCards.removeSubrange(0..<3)
+        }
+        /// Deal a set amount of cards at the beginning of the game.
+        if isNewGame {
+            cardsInPlay.append(contentsOf: deckOfCards[0..<numberOfCardsToStartWith])
+            deckOfCards.removeSubrange(0..<numberOfCardsToStartWith)
+        }
     }
 
     init(createCardContent: ([(numberOfShapes: TriState, shape: TriState, shading: TriState, color: TriState)]) -> [CardContent]) {
@@ -122,13 +144,13 @@ struct SetGame<CardContent> where CardContent: Hashable {
         }
         
         /// Shuffle deck of cards
-        //deckOfCards.shuffle()
+        deckOfCards.shuffle()
         
         /// Create player(s)
         players = [Player()]
         
         /// Start game with 12 cards on screen.
-        dealCards(numberOfCards: 12)
+        dealCards(isNewGame: true)
     }
     
     struct Card: Identifiable, Hashable where CardContent: Hashable {

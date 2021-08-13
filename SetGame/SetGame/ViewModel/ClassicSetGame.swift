@@ -62,7 +62,7 @@ class ClassicSetGame: ObservableObject {
     @Published private var setGame = createClassicSetGame()
     
     var cards: [Card] {
-        Array(setGame.cardsInPlay)
+        setGame.cardsInPlay
     }
     
     var score: Int {
@@ -83,7 +83,7 @@ class ClassicSetGame: ObservableObject {
     }
     
     func dealCards() {
-        setGame.dealCards()
+        setGame.dealCards(isUserRequest: true)
     }
     
     func createNewGame() {
