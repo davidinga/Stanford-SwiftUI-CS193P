@@ -40,21 +40,10 @@ struct SetGame<CardContent> where CardContent: Hashable {
             color.append(card.features.color)
         }
         
-        guard isAllTheSameOrAllDifferent(numberOfShapes) else {
-            return false
-        }
-        
-        guard isAllTheSameOrAllDifferent(shape) else {
-            return false
-        }
-        
-        guard isAllTheSameOrAllDifferent(shading) else {
-            return false
-        }
-        
-        guard isAllTheSameOrAllDifferent(color) else {
-            return false
-        }
+        guard isAllTheSameOrAllDifferent(numberOfShapes) else { return false }
+        guard isAllTheSameOrAllDifferent(shape) else { return false }
+        guard isAllTheSameOrAllDifferent(shading) else { return false }
+        guard isAllTheSameOrAllDifferent(color) else { return false }
         
         return true
     }
@@ -91,6 +80,7 @@ struct SetGame<CardContent> where CardContent: Hashable {
     /// Takes a specified`numberOfCards` out of `deckOfCards` and adds them to the `cardsInPlay`.
     mutating func dealCards(numberOfCards: Int = 3) {
         guard !deckOfCards.isEmpty else { return }
+        
         cardsInPlay.append(contentsOf: deckOfCards[0..<numberOfCards])
         deckOfCards.removeSubrange(0..<numberOfCards)
     }
@@ -121,10 +111,11 @@ struct SetGame<CardContent> where CardContent: Hashable {
         
         /// Add cards to `deckOfCards`
         for index in featuresForDeckOfCards.indices {
-            let featuresForCard = Card.Features( numberOfShapes: featuresForDeckOfCards[index].0,
-                                                 shape:          featuresForDeckOfCards[index].1,
-                                                 shading:        featuresForDeckOfCards[index].2,
-                                                 color:          featuresForDeckOfCards[index].3
+            let featuresForCard = Card.Features(
+                numberOfShapes: featuresForDeckOfCards[index].0,
+                shape:          featuresForDeckOfCards[index].1,
+                shading:        featuresForDeckOfCards[index].2,
+                color:          featuresForDeckOfCards[index].3
             )
             let card = Card(id: index, features: featuresForCard, content: content[index])
             deckOfCards.append(card)

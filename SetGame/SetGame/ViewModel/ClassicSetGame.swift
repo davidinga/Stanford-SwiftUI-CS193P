@@ -8,69 +8,52 @@
 import SwiftUI
 
 class ClassicSetGame: ObservableObject {
-    typealias Card = SetGame<String>.Card
+    typealias Card = SetGame<ClassicSetGameFeatures>.Card
     
-    static func createClassicSetGame() -> SetGame<String> {
-        SetGame<String> { featuresForAllCards in
-            var content: [String] = []
+    static func createClassicSetGame() -> SetGame<ClassicSetGameFeatures> {
+        SetGame<ClassicSetGameFeatures> { featuresForAllCards in
+            var content: [ClassicSetGameFeatures] = []
             for features in featuresForAllCards {
-
-                /// Build custom shape for each set of features
-                /// buildShape(numberOfShapes:shape:shading:color:)
-                /// Add custom shape to [Shape]
-                /// Return [Shape]
-
-                /// Must return list of shapes in the same order
-                /// that we received list of features.
-
-                /// Going to build cards with String
-                /// for testing purposes.
-
-                let uniqueString: String
-
-                let numberOfShapes: String
-                let shape: String
-                let shading: String
-                let color: String
+                
+                var featuresForCard = ClassicSetGameFeatures(numberOfShapes: .one, shape: .diamond, shading: .open, color: .green)
 
                 switch features.numberOfShapes {
                     case .low:
-                        numberOfShapes = "One"
+                        featuresForCard.numberOfShapes = .one
                     case .mid:
-                        numberOfShapes = "Two"
+                        featuresForCard.numberOfShapes = .two
                     case .high:
-                        numberOfShapes = "Three"
+                        featuresForCard.numberOfShapes = .three
                 }
 
                 switch features.shape {
                     case .low:
-                        shape = "Triangle"
+                        featuresForCard.shape = .diamond
                     case .mid:
-                        shape = "Squiggle"
+                        featuresForCard.shape = .squiggle
                     case .high:
-                        shape = "Oval"
+                        featuresForCard.shape = .oval
                 }
 
                 switch features.shading {
                     case .low:
-                        shading = "Solid"
+                        featuresForCard.shading = .solid
                     case .mid:
-                        shading = "Striped"
+                        featuresForCard.shading = .stripped
                     case .high:
-                        shading = "Open"
+                        featuresForCard.shading = .open
                 }
 
                 switch features.color {
                     case .low:
-                        color = "Red"
+                        featuresForCard.color = .red
                     case .mid:
-                        color = "Green"
+                        featuresForCard.color = .green
                     case .high:
-                        color = "Purple"
+                        featuresForCard.color = .purple
                 }
                 
-                uniqueString = "\(numberOfShapes)\n\(shape)\n\(shading)\n\(color)"
-                content.append(uniqueString)
+                content.append(featuresForCard)
             }
             return content
         }
@@ -105,5 +88,28 @@ class ClassicSetGame: ObservableObject {
     
     func createNewGame() {
         setGame = ClassicSetGame.createClassicSetGame()
+    }
+}
+
+struct ClassicSetGameFeatures: Hashable {
+    var numberOfShapes: NumberOfShapes
+    var shape: Shape
+    var shading: Shading
+    var color: Color
+    
+    enum NumberOfShapes: Int {
+        case one = 1, two, three
+    }
+
+    enum Shape {
+        case diamond, squiggle, oval
+    }
+
+    enum Shading {
+        case solid, stripped, open
+    }
+
+    enum Color {
+        case red, green, purple
     }
 }

@@ -19,7 +19,7 @@ struct ClassicSetGameView: View {
                 Text("Score: \(game.score)")
             }.padding(5)
             AspectVGrid(items: game.cards, aspectRatio: 2/3) { card in
-                CardView(game: game, card: card, uniqueShape: card.content)
+                CardView(game: game, card: card)
                     .padding(4)
                     .onTapGesture {
                         game.choose(card)
