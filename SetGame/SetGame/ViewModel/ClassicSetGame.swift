@@ -15,15 +15,15 @@ class ClassicSetGame: ObservableObject {
             var content: [ClassicSetGameFeatures] = []
             for features in featuresForAllCards {
                 
-                var featuresForCard = ClassicSetGameFeatures(numberOfShapes: .one, shape: .diamond, shading: .open, color: .green)
+                var featuresForCard = ClassicSetGameFeatures(numberOfShapes: 1, shape: .diamond, shading: .open, color: .red)
 
                 switch features.numberOfShapes {
                     case .low:
-                        featuresForCard.numberOfShapes = .one
+                        featuresForCard.numberOfShapes = 1
                     case .mid:
-                        featuresForCard.numberOfShapes = .two
+                        featuresForCard.numberOfShapes = 2
                     case .high:
-                        featuresForCard.numberOfShapes = .three
+                        featuresForCard.numberOfShapes = 3
                 }
 
                 switch features.shape {
@@ -88,28 +88,5 @@ class ClassicSetGame: ObservableObject {
     
     func createNewGame() {
         setGame = ClassicSetGame.createClassicSetGame()
-    }
-}
-
-struct ClassicSetGameFeatures: Hashable {
-    var numberOfShapes: NumberOfShapes
-    var shape: Shape
-    var shading: Shading
-    var color: Color
-    
-    enum NumberOfShapes: Int {
-        case one = 1, two, three
-    }
-
-    enum Shape {
-        case diamond, squiggle, oval
-    }
-
-    enum Shading {
-        case solid, stripped, open
-    }
-
-    enum Color {
-        case red, green, purple
     }
 }

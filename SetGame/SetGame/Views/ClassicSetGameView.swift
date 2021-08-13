@@ -17,7 +17,7 @@ struct ClassicSetGameView: View {
                 }
                 Spacer()
                 Text("Score: \(game.score)")
-            }.padding(5)
+            }.padding(.horizontal)
             AspectVGrid(items: game.cards, aspectRatio: 2/3) { card in
                 CardView(game: game, card: card)
                     .padding(4)
@@ -28,7 +28,7 @@ struct ClassicSetGameView: View {
             Button(action: game.dealCards) {
                 Text("Deal 3 More Cards")
             }
-        }.padding(5)
+        }.padding()
     }
 }
 

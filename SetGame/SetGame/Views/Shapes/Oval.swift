@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-/// Creates an Oval constructed of four points, two lines, and two half circles.
 struct Oval: Shape, InsettableShape {
     var insetAmount: CGFloat = 0
     
