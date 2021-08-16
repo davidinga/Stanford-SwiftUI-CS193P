@@ -69,6 +69,10 @@ class ClassicSetGame: ObservableObject {
         setGame.players.first!.score
     }
     
+    var deckIsEmpty: Bool {
+        setGame.deckOfCards.isEmpty
+    }
+    
     var threeCardsSelected: Bool {
         setGame.threeCardsSelected
     }

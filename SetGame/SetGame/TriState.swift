@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// A structure with three states.
 enum TriState {
     case low, mid, high
 

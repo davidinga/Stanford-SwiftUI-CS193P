@@ -43,17 +43,17 @@ struct ShapeView: View {
         case .diamond:
             ZStack {
                 Diamond().strokeBorder(features.color)
-                Diamond().fill(features.color).opacity(0.5)
+                Diamond().stripes(color: UIColor(features.color))
             }
         case .squiggle:
             ZStack {
                 Squiggle().strokeBorder(features.color)
-                Squiggle().fill(features.color).opacity(0.5)
+                Squiggle().stripes(color: UIColor(features.color))
             }
         case .oval:
             ZStack {
                 Oval().strokeBorder(features.color)
-                Oval().fill(features.color).opacity(0.5)
+                Oval().stripes(color: UIColor(features.color))
             }
         }
     }

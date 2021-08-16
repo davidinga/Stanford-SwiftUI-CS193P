@@ -8,8 +8,6 @@
 import Foundation
 
 struct SetGame<CardContent> where CardContent: Hashable {
-    let numberOfCards = 81
-    let numberOfFeatures = 4
     let numberOfCardsToSelect = 3
     let numberOfCardsToStartWith = 12
     var deckOfCards: [Card] = []

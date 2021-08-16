@@ -19,6 +19,7 @@
 		63ADFEED26C1D91D000DE709 /* SetGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADFEEC26C1D91D000DE709 /* SetGame.swift */; };
 		63ADFEEF26C1D960000DE709 /* ClassicSetGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADFEEE26C1D960000DE709 /* ClassicSetGame.swift */; };
 		63ADFEF326C24F69000DE709 /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADFEF226C24F69000DE709 /* AspectVGrid.swift */; };
+		63E2993D26CAC6370010C92D /* StripePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E2993C26CAC6370010C92D /* StripePattern.swift */; };
 		63FA82A326C471330095DD16 /* Squiggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FA82A226C471330095DD16 /* Squiggle.swift */; };
 		63FA82A526C479B10095DD16 /* Oval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FA82A426C479B10095DD16 /* Oval.swift */; };
 /* End PBXBuildFile section */
@@ -38,6 +39,7 @@
 		63ADFEEC26C1D91D000DE709 /* SetGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGame.swift; sourceTree = "<group>"; };
 		63ADFEEE26C1D960000DE709 /* ClassicSetGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassicSetGame.swift; sourceTree = "<group>"; };
 		63ADFEF226C24F69000DE709 /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
+		63E2993C26CAC6370010C92D /* StripePattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripePattern.swift; sourceTree = "<group>"; };
 		63FA82A226C471330095DD16 /* Squiggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Squiggle.swift; sourceTree = "<group>"; };
 		63FA82A426C479B10095DD16 /* Oval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Oval.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -59,6 +61,7 @@
 				638AF51226C4285B00149308 /* Diamond.swift */,
 				63FA82A226C471330095DD16 /* Squiggle.swift */,
 				63FA82A426C479B10095DD16 /* Oval.swift */,
+				63E2993C26CAC6370010C92D /* StripePattern.swift */,
 			);
 			path = Shapes;
 			sourceTree = "<group>";
@@ -212,6 +215,7 @@
 				638AF51326C4285B00149308 /* Diamond.swift in Sources */,
 				63ADFEED26C1D91D000DE709 /* SetGame.swift in Sources */,
 				63ADFEDA26C1D847000DE709 /* SetGameApp.swift in Sources */,
+				63E2993D26CAC6370010C92D /* StripePattern.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
