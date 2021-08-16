@@ -20,7 +20,7 @@ struct SetGame<CardContent> where CardContent: Hashable {
     }
     
     /// Returns true if the selected cards create a set.
-    var isMatch: Bool {
+    private var isMatch: Bool {
         guard threeCardsSelected else {
             return false
         }
@@ -47,7 +47,7 @@ struct SetGame<CardContent> where CardContent: Hashable {
         return true
     }
     
-    func isAllTheSameOrAllDifferent(_ elements: [TriState]) -> Bool {
+    private func isAllTheSameOrAllDifferent(_ elements: [TriState]) -> Bool {
         let set = Set(elements)
         return set.count == 1 || set.count == 3
     }

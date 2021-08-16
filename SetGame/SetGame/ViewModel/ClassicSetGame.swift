@@ -10,7 +10,7 @@ import SwiftUI
 class ClassicSetGame: ObservableObject {
     typealias Card = SetGame<ClassicSetGameFeatures>.Card
     
-    static func createClassicSetGame() -> SetGame<ClassicSetGameFeatures> {
+    private static func createClassicSetGame() -> SetGame<ClassicSetGameFeatures> {
         SetGame<ClassicSetGameFeatures> { featuresForAllCards in
             var content: [ClassicSetGameFeatures] = []
             for features in featuresForAllCards {
