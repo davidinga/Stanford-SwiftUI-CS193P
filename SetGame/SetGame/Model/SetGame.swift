@@ -12,23 +12,24 @@ struct SetGame<CardContent> where CardContent: Hashable {
     let numberOfCardsToStartWith = 12
     var deckOfCards: [Card] = []
     var cardsInPlay: [Card] = []
-    var selectedCardIDs: [Int] = []
+    var selectedCardIDs: [UUID] = []
     var players: [Player]
-    
+    var activePlayer: Player
+
     var threeCardsSelected: Bool {
         selectedCardIDs.count == numberOfCardsToSelect
     }
-    
+
     /// Returns true if the selected cards create a set.
     private var isMatch: Bool {
         guard threeCardsSelected else {
             return false
         }
-        
+
         /// For each one of the four categories of features —
         /// color, number, shape, and shading —
         /// the three cards must display that feature as a) either all the same, or b) all different.
-        
+
         var numberOfShapes, shape, shading, color: [TriState]
         numberOfShapes = []; shape = []; shading = []; color = []
         for id in selectedCardIDs {
@@ -38,20 +39,26 @@ struct SetGame<CardContent> where CardContent: Hashable {
             shading.append(card.features.shading)
             color.append(card.features.color)
         }
-        
+
         guard isAllTheSameOrAllDifferent(numberOfShapes) else { return false }
         guard isAllTheSameOrAllDifferent(shape) else { return false }
         guard isAllTheSameOrAllDifferent(shading) else { return false }
         guard isAllTheSameOrAllDifferent(color) else { return false }
-        
+
         return true
     }
-    
+
     private func isAllTheSameOrAllDifferent(_ elements: [TriState]) -> Bool {
         let set = Set(elements)
         return set.count == 1 || set.count == 3
     }
-    
+
+    mutating func flip(card: Card) {
+        if let index = cardsInPlay.firstIndex(where: {$0.id == card.id}) {
+            cardsInPlay[index].isFaceUp.toggle()
+        }
+    }
+
     /// Selects a card from the `cardsInPlay`.
     mutating func choose(_ card: Card) {
         /// If three cards were selected and not matched, clear selected cards.
@@ -71,11 +78,10 @@ struct SetGame<CardContent> where CardContent: Hashable {
                     let index = cardsInPlay.firstIndex(where: {$0.id == id})!
                     cardsInPlay[index].isMatched = true
                 }
-                selectedCardIDs = []
-                players[0].score += 1
+                activePlayer.score += 1
         }
     }
-    
+
     /// Takes a specified`numberOfCards` out of `deckOfCards` and adds them to the `cardsInPlay`.
     mutating func dealCards(isNewGame: Bool = false, isUserRequest: Bool = false) {
         /// Remove matched cards instead of replacing them when the `deckOfCards` is empty.
@@ -83,11 +89,14 @@ struct SetGame<CardContent> where CardContent: Hashable {
             cardsInPlay.removeAll(where: {$0.isMatched == true})
             return
         }
-        
+
         var cardsAlreadyDelt = false
         /// Replace matched cards with new cards from the `deckOfCards`.
         cardsInPlay.indices.forEach { index in
             if cardsInPlay[index].isMatched {
+                /// Move cards into active players deck.
+                activePlayer.cards += [cardsInPlay[index]]
+                /// Deal new card.
                 cardsInPlay[index] = deckOfCards.first!
                 deckOfCards.removeFirst()
                 cardsAlreadyDelt = true
@@ -104,30 +113,30 @@ struct SetGame<CardContent> where CardContent: Hashable {
             deckOfCards.removeSubrange(0..<numberOfCardsToStartWith)
         }
     }
-    
+
     /// Finds a matching set and randomly adds two of the three cards to `selectedCardIDs`.
     mutating func findPairOfMatchingCards() -> Bool {
         dealCards()
         let shuffledCards = cardsInPlay.shuffled()
-        
+
         for firstCardIndex in shuffledCards.indices {
             for secondCardIndex in shuffledCards.indices {
                 for thirdCardIndex in shuffledCards.indices {
                     if Set([shuffledCards[firstCardIndex].id, shuffledCards[secondCardIndex].id, shuffledCards[thirdCardIndex].id]).count == 3 {
-                        
+
                         let first = shuffledCards[firstCardIndex].features
                         let second = shuffledCards[secondCardIndex].features
                         let third = shuffledCards[thirdCardIndex].features
-                        
+
                         if isAllTheSameOrAllDifferent([first.numberOfShapes, second.numberOfShapes, third.numberOfShapes]),
                            isAllTheSameOrAllDifferent([first.shape, second.shape, third.shape]),
                            isAllTheSameOrAllDifferent([first.shading, second.shading, third.shading]),
-                           isAllTheSameOrAllDifferent([first.color, second.color, third.color])
-                        {
+                           isAllTheSameOrAllDifferent([first.color, second.color, third.color]) {
+
                             let shuffledCardIndices = [firstCardIndex, secondCardIndex, thirdCardIndex].shuffled()
                             let firstCard = shuffledCards[shuffledCardIndices[0]]
                             let secondCard = shuffledCards[shuffledCardIndices[1]]
-                            
+
                             selectedCardIDs = [firstCard.id, secondCard.id]
                             return true
                         }
@@ -161,7 +170,7 @@ struct SetGame<CardContent> where CardContent: Hashable {
         }
         /// Create card content for cards by passing collection of features to ititializer.
         let content = createCardContent(featuresForDeckOfCards)
-        
+
         /// Add cards to `deckOfCards`
         for index in featuresForDeckOfCards.indices {
             let featuresForCard = Card.Features(
@@ -170,26 +179,27 @@ struct SetGame<CardContent> where CardContent: Hashable {
                 shading:        featuresForDeckOfCards[index].2,
                 color:          featuresForDeckOfCards[index].3
             )
-            let card = Card(id: index, features: featuresForCard, content: content[index])
+            let card = Card(id: UUID(), features: featuresForCard, content: content[index])
             deckOfCards.append(card)
         }
-        
+
         /// Shuffle deck of cards
         deckOfCards.shuffle()
-        
+
         /// Create player(s)
         players = [Player()]
-        
-        /// Start game with 12 cards on screen.
-        dealCards(isNewGame: true)
+
+        /// First player
+        activePlayer = players.first!
     }
-    
+
     struct Card: Identifiable, Hashable where CardContent: Hashable {
         var isMatched = false
-        let id: Int
+        var isFaceUp = false
+        let id: UUID
         let features: Features
         let content: CardContent
-        
+
         struct Features: Hashable {
             let numberOfShapes: TriState
             let shape: TriState
@@ -197,8 +207,9 @@ struct SetGame<CardContent> where CardContent: Hashable {
             let color: TriState
         }
     }
-    
+
     struct Player {
         var score: Int = 0
+        var cards: [Card] = []
     }
 }

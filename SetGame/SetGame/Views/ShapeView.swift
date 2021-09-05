@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ShapeView: View {
     let features: ClassicSetGameFeatures
-    
+
     var body: some View {
         VStack {
             ForEach(0..<features.numberOfShapes, id: \.self) { _ in
@@ -24,7 +24,7 @@ struct ShapeView: View {
             }
         }
     }
-    
+
     @ViewBuilder
     var solidShape: some View {
         switch features.shape {
@@ -36,7 +36,7 @@ struct ShapeView: View {
             Oval().fill(features.color)
         }
     }
-    
+
     @ViewBuilder
     var strippedShape: some View {
         switch features.shape {
@@ -57,7 +57,7 @@ struct ShapeView: View {
             }
         }
     }
-    
+
     @ViewBuilder
     var openShape: some View {
         switch features.shape {
@@ -70,4 +70,3 @@ struct ShapeView: View {
         }
     }
 }
-

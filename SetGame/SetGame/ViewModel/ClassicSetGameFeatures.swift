@@ -21,4 +21,3 @@ struct ClassicSetGameFeatures: Hashable {
         case solid, stripped, open
     }
 }
-
