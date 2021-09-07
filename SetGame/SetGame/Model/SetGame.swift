@@ -63,16 +63,16 @@ struct SetGame<CardContent> where CardContent: Hashable {
     mutating func choose(_ card: Card) {
         /// If three cards were selected and not matched, clear selected cards.
         if threeCardsSelected { selectedCardIDs = [] }
-        /// Remove any cards that were matched from the `cardsInPlay`.
+        /// Deal cards if a set was found on the previous turn.
         dealCards()
-        /// Deselect card if one or two cards are currently selected.
+        /// Enable deselection if one or two cards are currently selected.
         if let index = selectedCardIDs.firstIndex(of: card.id), !threeCardsSelected {
             selectedCardIDs.remove(at: index)
         /// Select card if there are less than three cards selected.
         } else if !card.isMatched && selectedCardIDs.count < numberOfCardsToSelect {
             selectedCardIDs.append(card.id)
         }
-        /// If three cards are selcted and there is a match, mark the cards as matched, clear the selected cards, and add to the score.
+        /// If three cards are selcted and there is a match, mark the cards as matched, and add to the score.
         if threeCardsSelected, isMatch {
                 for id in selectedCardIDs {
                     let index = cardsInPlay.firstIndex(where: {$0.id == id})!
@@ -114,11 +114,13 @@ struct SetGame<CardContent> where CardContent: Hashable {
         }
     }
 
-    /// Finds a matching set and randomly adds two of the three cards to `selectedCardIDs`.
-    mutating func findPairOfMatchingCards() -> Bool {
+    /// Finds a matching set and selects two of the three cards; returns true if a set was found.
+    mutating func findSetOfMatchingCards() -> Bool {
+        /// Deal new cards if set was found on previous turn.
         dealCards()
+        /// Shuffle deck to find new solutions each time.
         let shuffledCards = cardsInPlay.shuffled()
-
+        /// Finds a set in O(n^3) time.
         for firstCardIndex in shuffledCards.indices {
             for secondCardIndex in shuffledCards.indices {
                 for thirdCardIndex in shuffledCards.indices {

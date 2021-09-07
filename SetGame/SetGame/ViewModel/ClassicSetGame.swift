@@ -10,11 +10,13 @@ import SwiftUI
 class ClassicSetGame: ObservableObject {
     typealias Card = SetGame<ClassicSetGameFeatures>.Card
     
+    /// A function used to initialize a new game of Set.
     private static func createClassicSetGame() -> SetGame<ClassicSetGameFeatures> {
+        /// Configures cards with features defined by `ClassicSetGameFeatures`.
         SetGame<ClassicSetGameFeatures> { featuresForAllCards in
             var content: [ClassicSetGameFeatures] = []
             for features in featuresForAllCards {
-
+                
                 var featuresForCard = ClassicSetGameFeatures(numberOfShapes: 1, shape: .diamond, shading: .open, color: .red)
 
                 switch features.numberOfShapes {
@@ -60,68 +62,68 @@ class ClassicSetGame: ObservableObject {
     }
 
     @Published private var setGame = createClassicSetGame()
-
+    
+    /// Playable cards that are face up.
     var cardsInPlay: [Card] {
         setGame.cardsInPlay
     }
-
+    /// Deck of cards to deal from.
     var deckOfCards: [Card] {
         setGame.deckOfCards
     }
-
-    // BUG: This will break with multiple players
+    /// Discard pile for a single player.
     var discardPile: [Card] {
         setGame.activePlayer.cards
     }
-
+    /// Returns the score for a single player.
     var score: Int {
         setGame.activePlayer.score
     }
-
+    /// Returns true if the deck is empty.
     var deckIsEmpty: Bool {
         setGame.deckOfCards.isEmpty
     }
-
+    /// Returns the ID's of the selected cards.
     var selectedCardIDs: [UUID] {
         setGame.selectedCardIDs
     }
-
+    /// Returns true if three cards are selected.
     var threeCardsSelected: Bool {
         setGame.threeCardsSelected
     }
-
+    /// Returns true if the card is selected.
     func isSelected(_ card: Card) -> Bool {
         setGame.selectedCardIDs.contains(card.id) && !card.isMatched && !threeCardsSelected
     }
-
+    /// Returns true if the selected cards are a mismatch.
     func isMismatch(_ card: Card) -> Bool {
         setGame.selectedCardIDs.contains(card.id) && !card.isMatched && threeCardsSelected
     }
-
+    /// Returns true if the selected cards match.
     func isMatch(_ card: Card) -> Bool {
         setGame.selectedCardIDs.contains(card.id) && card.isMatched && threeCardsSelected
     }
-
+    /// Flips card face up.
     func flip(_ card: Card) {
         setGame.flip(card: card)
     }
-
-    func choose(_ card: Card) {
-        setGame.choose(card)
-    }
-
-    func dealCards() {
-        setGame.dealCards(isUserRequest: true)
-    }
-
+    /// Deals twelve cards to start game.
     func dealTwelveCards() {
         setGame.dealCards(isNewGame: true)
     }
-
-    func requestHint() -> Bool {
-        setGame.findPairOfMatchingCards()
+    /// User chooses a card.
+    func choose(_ card: Card) {
+        setGame.choose(card)
     }
-
+    /// User requests to deal cards.
+    func dealCards() {
+        setGame.dealCards(isUserRequest: true)
+    }
+    /// User requests a hint.
+    func requestHint() -> Bool {
+        setGame.findSetOfMatchingCards()
+    }
+    /// User requests a new game.
     func createNewGame() {
         setGame = ClassicSetGame.createClassicSetGame()
         setGame.dealCards(isNewGame: true)
